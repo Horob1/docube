@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: User-Service
+  data:
+    mongodb:
+      database: horob1_docub_user_service
+      host: localhost
+      port: 27017
+      auto-index-creation: true
+      # username: ...
+      # password: ...
+  kafka:
+    bootstrap-servers: localhost:7092
+    consumer:
+      group-id: user-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.horob1.*"
+        security.protocol: SASL_PLAINTEXT
+        sasl.mechanism: PLAIN
+        sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="horob1" password="2410";
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        security.protocol: SASL_PLAINTEXT
+        sasl.mechanism: PLAIN
+        sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="horob1" password="2410";
+
+server:
+  port: 9050
+
+eureka:
+  instance:
+    appname: US_DEV1
+  client:
+    service-url:
+      defaultZone: http://localhost:9000/eureka

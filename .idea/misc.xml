@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/Auth-Service" />
+    <file type="web" url="file://$PROJECT_DIR$/Common-Service" />
+    <file type="web" url="file://$PROJECT_DIR$/Discovery-Server" />
+    <file type="web" url="file://$PROJECT_DIR$/Gateway" />
+    <file type="web" url="file://$PROJECT_DIR$/Notification-Service" />
+    <file type="web" url="file://$PROJECT_DIR$/Socket-Service" />
+    <file type="web" url="file://$PROJECT_DIR$/User-Service" />
+  </component>
+  <component name="ProjectRootManager">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>

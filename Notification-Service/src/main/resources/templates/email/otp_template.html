@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title != null ? title : 'OTP Verification'}">OTP Verification</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh;">
+
+<table role="presentation" style="width: 100%; border-collapse: collapse;">
+    <tr>
+        <td style="padding: 40px 20px;">
+            <table role="presentation" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); overflow: hidden;">
+
+                <!-- Header with gradient -->
+                <tr>
+                    <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 50px 40px; text-align: center; position: relative;">
+                        <div style="background-color: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 16px; padding: 20px; display: inline-block;">
+                            <h2 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;" th:text="${appName}">System Name</h2>
+                            <div style="width: 60px; height: 3px; background-color: #ffffff; margin: 15px auto; border-radius: 2px; opacity: 0.8;"></div>
+                            <p style="margin: 0; color: #ffffff; font-size: 13px; letter-spacing: 3px; font-weight: 500; text-transform: uppercase; opacity: 0.9;">Verification Code</p>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Body -->
+                <tr>
+                    <td style="padding: 50px 40px;">
+                        <p style="margin: 0 0 25px 0; color: #1a1a1a; font-size: 17px; line-height: 1.6; font-weight: 500;">
+                                <span th:if="${recipientName != null}">
+                                    Hi <span style="color: #667eea; font-weight: 600;" th:text="${recipientName}">User</span> 👋
+                                </span>
+                            <span th:if="${recipientName == null}">
+                                    Hi there 👋
+                                </span>
+                        </p>
+
+                        <p style="margin: 0 0 35px 0; color: #4a5568; font-size: 15px; line-height: 1.7;">
+                            We received a request for a one-time password (OTP). Use the code below to complete your verification:
+                        </p>
+
+                        <!-- OTP Box with modern design -->
+                        <table role="presentation" style="width: 100%; border-collapse: collapse; margin: 0 0 35px 0;">
+                            <tr>
+                                <td style="padding: 0;">
+                                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px; padding: 3px;">
+                                        <div style="background-color: #ffffff; border-radius: 18px; padding: 30px; text-align: center;">
+                                            <p style="margin: 0 0 10px 0; color: #718096; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600;">Your Code</p>
+                                            <span style="font-size: 42px; font-weight: 700; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 12px; font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;" th:text="${otp}">123456</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Info box -->
+                        <table role="presentation" style="width: 100%; border-collapse: collapse; margin: 0 0 30px 0;">
+                            <tr>
+                                <td style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 16px; padding: 20px 25px; border-left: 4px solid #f59e0b;">
+                                    <p style="margin: 0; color: #92400e; font-size: 14px; line-height: 1.6;">
+                                        ⏱️ This code will expire in
+                                        <strong style="font-weight: 700;" th:text="${expirationTime != null ? expirationTime : '15 minutes'}">15 minutes</strong>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table role="presentation" style="width: 100%; border-collapse: collapse; margin: 0 0 30px 0;">
+                            <tr>
+                                <td style="background-color: #f7fafc; border-radius: 16px; padding: 20px 25px; border-left: 4px solid #cbd5e0;">
+                                    <p style="margin: 0; color: #4a5568; font-size: 14px; line-height: 1.6;">
+                                        🔒 If you didn't request this code, you can safely ignore this email. Your account remains secure.
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div style="margin-top: 40px; padding-top: 30px; border-top: 2px solid #f0f0f0;">
+                            <p style="margin: 0 0 8px 0; color: #4a5568; font-size: 15px; line-height: 1.6;">
+                                Best regards,
+                            </p>
+                            <p style="margin: 0; color: #1a1a1a; font-size: 16px; line-height: 1.6; font-weight: 600;">
+                                The <span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;" th:text="${appName}">System Name</span> Team
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                    <td style="background: linear-gradient(to right, #f7fafc 0%, #edf2f7 100%); padding: 30px 40px; text-align: center; border-top: 1px solid #e2e8f0;">
+                        <p style="margin: 0 0 8px 0; color: #718096; font-size: 13px; line-height: 1.6;">
+                            This is an automated message, please do not reply.
+                        </p>
+                        <p style="margin: 0; color: #a0aec0; font-size: 12px; line-height: 1.5;">
+                            © 2025 <span th:text="${appName}">System Name</span>. All rights reserved.
+                        </p>
+                    </td>
+                </tr>
+
+            </table>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

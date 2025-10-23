@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: Auth-Service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/horob1_docub_auth_service
+    username: postgres
+    password: 2410
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  cache:
+    type: redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: 2410
+      timeout: 5000ms
+      database: 2
+  kafka:
+    bootstrap-servers: localhost:7092
+    consumer:
+      group-id: auth-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.horob1.*"
+        security.protocol: SASL_PLAINTEXT
+        sasl.mechanism: PLAIN
+        sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="horob1" password="2410";
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        security.protocol: SASL_PLAINTEXT
+        sasl.mechanism: PLAIN
+        sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="horob1" password="2410";
+server:
+  port: 9100
+
+eureka:
+  instance:
+    appname: AS_DEV1
+  client:
+    service-url:
+      defaultZone: http://localhost:9000/eureka
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      userService:
+        registerHealthIndicator: true
+        slidingWindowSize: 5
+        minimumNumberOfCalls: 3
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+
+google:
+  client-id: 967227059533-n2f3t4vqrb5p3kj63fknn60ru0vemdvj.apps.googleusercontent.com
