@@ -7,6 +7,7 @@ import com.horob1.common_service.api.dto.response.ApiResponse
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -15,6 +16,7 @@ import java.util.*
 class PermissionCommandController(
     private val permissionCommandHandler: PermissionCommandHandler
 ) {
+    //    @PreAuthorize("hasAuthority('permission:add') or hasAuthority('permission:full_access')")
     @PostMapping
     fun create(
         @Valid @RequestBody data: CreateUpdatePermissionDto
@@ -27,6 +29,7 @@ class PermissionCommandController(
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse)
     }
 
+    //    @PreAuthorize("hasAuthority('permission:edit') or hasAuthority('permission:full_access')")
     @PutMapping("/{permissionId}")
     fun update(
         @Valid @RequestBody data: CreateUpdatePermissionDto,
@@ -43,6 +46,7 @@ class PermissionCommandController(
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse)
     }
 
+    //    @PreAuthorize("hasAuthority('permission:delete')  or hasAuthority('permission:full_access')")
     @DeleteMapping("/{permissionId}")
     fun delete(
         @PathVariable permissionId: UUID

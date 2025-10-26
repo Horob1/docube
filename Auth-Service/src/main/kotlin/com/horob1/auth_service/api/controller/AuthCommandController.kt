@@ -1,22 +1,26 @@
 package com.horob1.auth_service.api.controller
 
+import com.horob1.auth_service.api.dto.request.ForgotPasswordDto
 import com.horob1.auth_service.api.dto.request.GoogleAuthDto
 import com.horob1.auth_service.api.dto.request.LoginDto
+import com.horob1.auth_service.api.dto.request.LogoutDevicesDto
 import com.horob1.auth_service.api.dto.request.OTPDto
 import com.horob1.auth_service.api.dto.request.RefreshTokenDto
 import com.horob1.auth_service.api.dto.request.RegisterDto
+import com.horob1.auth_service.api.dto.request.ResetPasswordDto
 import com.horob1.auth_service.api.dto.response.LoginResponseDto
 import com.horob1.auth_service.application.command.AuthCommandHandler
 import com.horob1.common_service.api.dto.response.ApiResponse
-import com.horob1.common_service.constant.SecurityConstants.USER_ID_HEADER
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+
 //TODO: trả token theo client
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -76,7 +80,7 @@ class AuthCommandController(
     // Verify email
     @PostMapping("/verify-email")
     fun verifyEmail(
-        @RequestHeader(USER_ID_HEADER) userId: String,
+        @AuthenticationPrincipal userId: String,
         @Valid @RequestBody data: OTPDto
     ): ResponseEntity<ApiResponse<Nothing>> {
         authCommandHandler.verifyEmail(
@@ -93,7 +97,7 @@ class AuthCommandController(
     // Send Email Verify
     @PostMapping("/send-verification-email")
     fun sendVerificationEmail(
-        @RequestHeader(USER_ID_HEADER) userId: String,
+        @AuthenticationPrincipal userId: String
     ): ResponseEntity<ApiResponse<Nothing>> {
         authCommandHandler.sendVerifyEmailOtp(userId)
         val apiResponse = ApiResponse<Nothing>(
@@ -104,17 +108,85 @@ class AuthCommandController(
     }
 
     // Forgot password
+    @PostMapping("/forgot-password")
+    fun forgotPassword(
+        @Valid @RequestBody data: ForgotPasswordDto
+    ): ResponseEntity<ApiResponse<LoginResponseDto>> {
+        val apiResponse = ApiResponse<LoginResponseDto>(
+            status = HttpStatus.OK,
+            message = "Successfully triggered forgot-password event!",
+            data = authCommandHandler.forgotPassword(data.email)
+        )
+        return ResponseEntity.status(apiResponse.status).body(apiResponse)
+    }
 
     // Send Email
+    @PostMapping("/send-verification-password")
+    fun sendVerificationPassword(
+        @AuthenticationPrincipal userId: String
+    ): ResponseEntity<ApiResponse<Nothing>> {
+        authCommandHandler.sendVerifyPasswordOtp(userId)
+        val apiResponse = ApiResponse<Nothing>(
+            status = HttpStatus.OK,
+            message = "Send email successful!"
+        )
+        return ResponseEntity.status(apiResponse.status).body(apiResponse)
+    }
 
     // Reset password
+    @PostMapping("/reset-password")
+    fun resetPassword(
+        @AuthenticationPrincipal userId: String,
+        @Valid @RequestBody data: ResetPasswordDto
+    ): ResponseEntity<ApiResponse<Nothing>> {
+        authCommandHandler.resetPassword(data.otp, data.newPassword, userId)
+        val apiResponse = ApiResponse<Nothing>(
+            status = HttpStatus.OK,
+            message = "Successfully reset password!"
+        )
+        return ResponseEntity.status(apiResponse.status).body(apiResponse)
+    }
+
+    // Resend 2fa
+    @PostMapping("/send-verification-2fa")
+    fun sendVerification2FA(
+        @AuthenticationPrincipal userId: String,
+    ): ResponseEntity<ApiResponse<Nothing>> {
+        authCommandHandler.send2FaOtpEmail(
+            userId = userId,
+        )
+        val apiResponse = ApiResponse<Nothing>(
+            status = HttpStatus.OK,
+            message = "Send email successful!!"
+        )
+        return ResponseEntity.status(apiResponse.status).body(apiResponse)
+    }
+
+    // verify2fa
+    @PostMapping("/2fa")
+    fun authenticate2FA(
+        @AuthenticationPrincipal userId: String,
+        @Valid @RequestBody data: OTPDto,
+        @RequestHeader("User-Agent") userAgent: String
+    ): ResponseEntity<ApiResponse<LoginResponseDto>> {
+        val apiResponse = ApiResponse<LoginResponseDto>(
+            status = HttpStatus.OK,
+            message = "Successfully authenticate 2FA!",
+            data = authCommandHandler.twoFactorAuth(
+                userId = userId,
+                otp = data.otp,
+                ua = userAgent
+            )
+        )
+        return ResponseEntity.status(apiResponse.status).body(apiResponse)
+    }
 
     // refresh token
     @PostMapping("/refresh")
     fun refresh(
         @Valid @RequestBody data: RefreshTokenDto,
         @RequestHeader("User-Agent") userAgent: String
-    ) : ResponseEntity<ApiResponse<LoginResponseDto>> {
+    ): ResponseEntity<ApiResponse<LoginResponseDto>> {
         print("refresh")
         val apiResponse = ApiResponse<LoginResponseDto>(
             status = HttpStatus.OK,
@@ -127,7 +199,20 @@ class AuthCommandController(
         return ResponseEntity.status(apiResponse.status).body(apiResponse)
     }
 
-    // Logout devices
-
-    // Login current device
+    // Login device
+    @PostMapping("/logout")
+    fun logout(
+        @AuthenticationPrincipal userId: String,
+        @RequestBody data: LogoutDevicesDto
+    ): ResponseEntity<ApiResponse<Nothing>> {
+        authCommandHandler.logoutDevices(
+            userId = userId,
+            data.deviceIds
+        )
+        val apiResponse = ApiResponse<Nothing>(
+            status = HttpStatus.OK,
+            message = "Successfully logged out!",
+        )
+        return ResponseEntity.status(apiResponse.status).body(apiResponse)
+    }
 }

@@ -50,3 +50,15 @@ val WrongOtp = AppError.CustomError(
     message = "Wrong otp",
     status = HttpStatus.BAD_REQUEST
 )
+
+val ClientNotFound = AppError.CustomError(
+    code = "AUTHS_0009",
+    message = "Client not found",
+    status = HttpStatus.NOT_FOUND
+)
+
+val WrongUser = AppError.CustomError(
+    code = "AUTHS_0010",
+    message = "Wrong user",
+    status = HttpStatus.BAD_REQUEST
+)

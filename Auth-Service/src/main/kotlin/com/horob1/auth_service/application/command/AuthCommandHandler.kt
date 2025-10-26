@@ -4,6 +4,7 @@ import com.horob1.auth_service.api.dto.request.RegisterDto
 import com.horob1.auth_service.api.dto.request.toCreateUser
 import com.horob1.auth_service.api.dto.response.LoginResponseDto
 import com.horob1.auth_service.api.exception.BannedUserRequest
+import com.horob1.auth_service.api.exception.ClientNotFound
 import com.horob1.auth_service.api.exception.FailedLoginLimit
 import com.horob1.auth_service.api.exception.InvalidIdentityInfo
 import com.horob1.auth_service.api.exception.InvalidToken
@@ -11,6 +12,7 @@ import com.horob1.auth_service.api.exception.TOO_MANY_REQUESTS
 import com.horob1.auth_service.api.exception.UserExistedRequest
 import com.horob1.auth_service.api.exception.UserNotFound
 import com.horob1.auth_service.api.exception.WrongOtp
+import com.horob1.auth_service.api.exception.WrongUser
 import com.horob1.auth_service.domain.repository.AuthRepository
 import com.horob1.auth_service.infrastructure.GoogleAuthClient
 import com.horob1.auth_service.infrastructure.producer.AuthEventProducer
@@ -24,6 +26,7 @@ import com.horob1.common_service.util.OtpGenerator
 import com.horob1.common_service.enums.UserStatus
 import com.horob1.common_service.enums.TokenType
 import com.horob1.common_service.kafka.event.auth.OtpEmailEvent
+import com.horob1.common_service.kafka.event.auth.ResetPasswordEvent
 import com.horob1.common_service.kafka.event.auth.UserIdEvent
 import com.horob1.common_service.util.sha256
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -46,7 +49,12 @@ class AuthCommandHandler(
         const val PREFIX_2FA_TOKEN = "2FA_TOKEN"
         const val PREFIX_VERIFY_EMAIL_TOKEN = "VERIFY_EMAIL_TOKEN"
         const val LIMIT_VERIFY_EMAIL = "LIMIT_VERIFY_EMAIL"
+        const val LIMIT_FORGOT_PASSWORD = "LIMIT_FORGOT_PASSWORD"
+        const val FORGOT_PASSWORD_OTP = "FORGOT_PASSWORD"
+        const val LIMIT_2FA_EMAIL = "LIMIT_2FA_EMAIL"
+        const val TWO_FACTOR_AUTH_OTP = "TWO_FACTOR_AUTH_OTP"
     }
+
     fun login(email: String, password: String, ua: String): LoginResponseDto {
         val failedPasswordAttemptCount = calcFailedPasswordAttemptCount(email)
 
@@ -140,7 +148,7 @@ class AuthCommandHandler(
 
         var userId: String
 
-        if(userDto == null) {
+        if (userDto == null) {
             val createUserDto = CreateUserDto(
                 email = payload.email,
                 firstName = "User",
@@ -152,7 +160,7 @@ class AuthCommandHandler(
             userId = authRepository.createUser(createUserDto)
         } else userId = userDto.id
 
-        if(userDto?.status == UserStatus.BAN) {
+        if (userDto?.status == UserStatus.BAN) {
             throw AppException(BannedUserRequest)
         }
 
@@ -165,7 +173,7 @@ class AuthCommandHandler(
     ) {
         val existedUser = authRepository.findIdentityByEmail(email = dto.email)
 
-        if(existedUser != null) {
+        if (existedUser != null) {
             throw AppException(UserExistedRequest)
         }
 
@@ -188,11 +196,11 @@ class AuthCommandHandler(
             )
         )
 
-        if(oldToken == null) {
+        if (oldToken == null) {
             throw AppException(InvalidToken)
         }
 
-        if(payload.subject != oldToken.userId) {
+        if (payload.subject != oldToken.userId) {
             throw AppException(InvalidToken)
         }
 
@@ -221,7 +229,7 @@ class AuthCommandHandler(
 
     fun sendVerifyEmailOtp(userId: String) {
         val userDto = authRepository.findIdentityByUserId(userId) ?: throw AppException(UserNotFound)
-        if(isLimitEmailValidation(email = userDto.email)) {
+        if (isLimitEmailValidation(email = userDto.email)) {
             throw AppException(TOO_MANY_REQUESTS)
         }
         setLimitEmailValidation(email = userDto.email)
@@ -244,7 +252,7 @@ class AuthCommandHandler(
     fun verifyEmail(userId: String, otp: String) {
         val userDto = authRepository.findIdentityByUserId(userId) ?: throw AppException(UserNotFound)
         val savedOtp = getVerifyEmailOtp(userDto.email) ?: throw AppException(WrongOtp)
-        if(
+        if (
             !passwordEncoder.matches(
                 otp,
                 savedOtp
@@ -256,6 +264,158 @@ class AuthCommandHandler(
                 userId = userDto.id,
             )
         )
+    }
+
+    fun forgotPassword(email: String): LoginResponseDto {
+        val userDto = authRepository.findIdentityByEmail(email) ?: throw AppException(UserNotFound)
+        return LoginResponseDto(
+            accessToken = jwtTokenManager.generateToken(
+                subject = userDto.id,
+                tokenType = TokenType.PASSWORD_RESET,
+            ),
+            refreshToken = null,
+            accessTokenType = TokenType.PASSWORD_RESET.name,
+            clientId = null
+        )
+    }
+
+    fun sendVerifyPasswordOtp(userId: String) {
+        val userDto = authRepository.findIdentityByUserId(userId) ?: throw AppException(UserNotFound)
+        if (isLimitForgotPasswordEmail(
+                userDto.email,
+            )
+        ) {
+            throw AppException(TOO_MANY_REQUESTS)
+        }
+
+        setLimitForgotPasswordEmail(
+            userDto.email,
+        )
+
+        val otp = OtpGenerator.generateOtp()
+        saveForgotPasswordOtp(userDto.email, otp)
+
+        // Send message
+        authEventProducer.sendVerifyEmailEvent(
+            OtpEmailEvent(
+                userId = userDto.id,
+                email = userDto.email,
+                otp = otp,
+                name = "${userDto.firstName} ${userDto.lastName}",
+                emailType = EmailType.RESET_PASSWORD,
+            )
+        )
+    }
+
+    fun resetPassword(otp: String, newPassword: String, userId: String) {
+        val userDto = authRepository.findIdentityByUserId(userId) ?: throw AppException(UserNotFound)
+        val oldOtp = getForgotPasswordOtp(userDto.email) ?: throw AppException(WrongOtp)
+        if (!passwordEncoder.matches(otp, oldOtp)) {
+            throw AppException(WrongOtp)
+        }
+        authEventProducer.sendResetPasswordEvent(
+            ResetPasswordEvent(
+                userId = userDto.id,
+                passwordEncoder.encode(newPassword),
+            )
+        )
+    }
+
+    fun send2FaOtpEmail(userId: String) {
+        val userDto = authRepository.findIdentityByUserId(userId) ?: throw AppException(UserNotFound)
+        if (isLimit2FAEmail(email = userDto.email)) {
+            throw AppException(TOO_MANY_REQUESTS)
+        }
+        setLimit2FAEmail(email = userDto.email)
+
+        val otp = OtpGenerator.generateOtp()
+        save2FAOtp(userDto.email, otp)
+
+        // Send message
+        authEventProducer.sendVerifyEmailEvent(
+            OtpEmailEvent(
+                userId = userDto.id,
+                email = userDto.email,
+                otp = otp,
+                name = "${userDto.firstName} ${userDto.lastName}",
+                emailType = EmailType.TWO_FACTOR_AUTH,
+            )
+        )
+    }
+
+    fun twoFactorAuth(userId: String, otp: String, ua: String): LoginResponseDto {
+        val userDto = authRepository.findIdentityByUserId(userId) ?: throw AppException(UserNotFound)
+        val oldOtp = get2FAOtp(userDto.email) ?: throw AppException(WrongOtp)
+        if (!passwordEncoder.matches(otp, oldOtp)) {
+            throw AppException(WrongOtp)
+        }
+
+        return genLoginResponse(userDto.id, ua)
+    }
+
+    fun logoutDevices(userId: String, devicesId: List<UUID>) {
+        val tokens = authRepository.findTokenByUserId(userId)
+        tokens.forEach { token ->
+            if (devicesId.contains(token.id)) authRepository.deleteToken(token.token)
+        }
+    }
+
+    private fun get2FAOtp(email: String): String? {
+        return redisStringService.getValue(
+            get2FAOtpKey(email)
+        )
+    }
+
+    private fun setLimit2FAEmail(email: String) {
+        redisStringService.saveValue(
+            getLimit2FAEmailKey(email),
+            "1",
+            Duration.ofMinutes(1)
+        )
+    }
+
+    private fun isLimit2FAEmail(email: String): Boolean {
+        return redisStringService.getValue(getLimit2FAEmailKey(email)) != null
+    }
+
+    private fun getLimit2FAEmailKey(email: String): String {
+        return "${LIMIT_2FA_EMAIL}:${email}"
+    }
+
+    private fun getForgotPasswordOtp(email: String): String? {
+        return redisStringService.getValue(
+            getForgotPasswordOtpKey(email)
+        )
+    }
+
+    private fun saveForgotPasswordOtp(email: String, otp: String) {
+        return redisStringService.saveValue(
+            getForgotPasswordOtpKey(email),
+            passwordEncoder.encode(otp),
+            Duration.ofMinutes(15)
+        )
+    }
+
+    private fun getForgotPasswordOtpKey(email: String): String {
+        return "$FORGOT_PASSWORD_OTP:$email"
+    }
+
+    private fun setLimitForgotPasswordEmail(email: String) {
+        redisStringService.saveValue(
+            getLimitForgotPasswordEmailKey(email),
+            "1",
+            Duration.ofMinutes(1)
+        )
+    }
+
+    private fun isLimitForgotPasswordEmail(email: String): Boolean {
+        return redisStringService.getValue(
+            getLimitForgotPasswordEmailKey(email)
+        ) != null
+    }
+
+    private fun getLimitForgotPasswordEmailKey(email: String): String {
+        return "$LIMIT_FORGOT_PASSWORD:$email"
     }
 
     private fun genLoginResponse(userId: String, ua: String): LoginResponseDto {

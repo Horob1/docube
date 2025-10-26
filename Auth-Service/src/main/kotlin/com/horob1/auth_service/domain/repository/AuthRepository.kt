@@ -4,6 +4,7 @@ import com.horob1.auth_service.domain.model.token.Token
 import com.horob1.common_service.api.dto.request.CreateUserDto
 import com.horob1.common_service.api.dto.response.UserIdentityDto
 import org.springframework.web.bind.annotation.RequestBody
+import java.util.UUID
 
 interface AuthRepository {
     fun findIdentityByEmail(email: String): UserIdentityDto?
@@ -15,6 +16,8 @@ interface AuthRepository {
     fun saveToken(token: Token): Token
 
     fun createUser(@RequestBody body: CreateUserDto): String
+
+    fun findTokenById(id: UUID): Token?
 
     fun findToken(token: String): Token?
 

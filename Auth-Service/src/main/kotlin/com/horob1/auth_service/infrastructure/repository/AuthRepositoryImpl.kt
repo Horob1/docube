@@ -10,6 +10,7 @@ import com.horob1.common_service.api.exception.AppError
 import com.horob1.common_service.api.exception.AppException
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker
 import org.springframework.stereotype.Repository
+import java.util.UUID
 
 @Repository
 class AuthRepositoryImpl(
@@ -46,6 +47,10 @@ class AuthRepositoryImpl(
     @CircuitBreaker(name = "User-Service", fallbackMethod = "createUserFallback")
     override fun createUser(body: CreateUserDto): String {
         return userServiceClient.createUser(body)
+    }
+
+    override fun findTokenById(id: UUID): Token? {
+        return tokenPostgresRepository.findById(id).orElse(null)
     }
 
     override fun findToken(token: String): Token? {

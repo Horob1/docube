@@ -2,7 +2,6 @@ package com.horob1.gateway.config
 
 import com.horob1.gateway.api.interceptor.VerifyUserFilterFactory
 import com.horob1.gateway.enum.TokenType
-import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator
 import org.springframework.cloud.gateway.route.RouteLocator
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder
 import org.springframework.cloud.gateway.route.builder.filters
@@ -21,6 +20,7 @@ class GatewayRoutes(
             // Route cho auth verify email
             route("auth-verify-email") {
                 path("/api/v1/auth/verify-email")
+                    .or(path("/api/v1/auth/send-verification-email"))
                 filters {
                     filter(
                         verifyUserFilterFactory.apply(
@@ -31,23 +31,47 @@ class GatewayRoutes(
                 uri("lb://AUTH-SERVICE")
             }
 
-            route("auth-send-verification-email") {
-                path("/api/v1/auth/send-verification-email")
+            route("auth-reset-password") {
+                path("/api/v1/auth/send-verification-password")
+                    .or(path("/api/v1/auth/reset-password"))
                 filters {
                     filter(
                         verifyUserFilterFactory.apply(
-                            VerifyUserFilterFactory.Config(tokenType = TokenType.EMAIL_VERIFY)
+                            VerifyUserFilterFactory.Config(tokenType = TokenType.PASSWORD_RESET)
                         )
                     )
                 }
                 uri("lb://AUTH-SERVICE")
             }
-            // Route cho /profile/**
-            route("user-service-profile") {
-                path("/api/v1/profile/**")
+
+            route("auth-2fa") {
+                path("/api/v1/auth/send-verification-2fa")
+                    .or(path("/api/v1/auth/2fa"))
                 filters {
+                    filter(
+                        verifyUserFilterFactory.apply(
+                            VerifyUserFilterFactory.Config(tokenType = TokenType.PASSWORD_RESET)
+                        )
+                    )
                 }
-                uri("lb://USER-SERVICE")
+                uri("lb://AUTH-SERVICE")
+            }
+
+            route("auth-logout") {
+                path("/api/v1/auth/logout")
+                filters {
+                    filter(
+                        verifyUserFilterFactory.apply(
+                            VerifyUserFilterFactory.Config(tokenType = TokenType.ACCESS)
+                        )
+                    )
+                }
+                uri("lb://AUTH-SERVICE")
+            }
+
+            route("auth") {
+                path("/api/v1/auth/**")
+                uri("lb://AUTH-SERVICE")
             }
         }
     }

@@ -1,4 +1,1 @@
 package com.horob1.auth_service.application.command
-
-class InternalCallCommandHandler {
-}
