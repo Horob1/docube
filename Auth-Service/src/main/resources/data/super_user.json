@@ -1,0 +1,16 @@
+{
+  "createdAt": "2025-10-29T07:54:04.144Z",
+  "createdBy": null,
+  "updatedAt": "2025-10-29T07:54:04.144Z",
+  "updatedBy": null,
+  "email": "nguyentheanh24102003@gmail.com",
+  "firstName": "John",
+  "lastName": "Doe",
+  "password": "$2a$12$bQVqXxnYCWcirMm0Tgb1weBGXytOHdgJP5bGTZ4FboKihnO1Y4PZC",
+  "phoneNumber": "+84123456789",
+  "address": "123 Main Street",
+  "avatar": "",
+  "status": "ACTIVE",
+  "previousStatus": null,
+  "is2FAEnabled": false
+}

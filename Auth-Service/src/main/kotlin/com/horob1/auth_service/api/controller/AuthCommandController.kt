@@ -9,7 +9,7 @@ import com.horob1.auth_service.api.dto.request.RefreshTokenDto
 import com.horob1.auth_service.api.dto.request.RegisterDto
 import com.horob1.auth_service.api.dto.request.ResetPasswordDto
 import com.horob1.auth_service.api.dto.response.LoginResponseDto
-import com.horob1.auth_service.application.command.AuthCommandHandler
+import com.horob1.auth_service.service.command.AuthCommandHandler
 import com.horob1.common_service.api.dto.response.ApiResponse
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.UUID
 
-//TODO: trả token theo client
 @RestController
 @RequestMapping("/api/v1/auth")
 class AuthCommandController(
@@ -33,7 +33,7 @@ class AuthCommandController(
         @Valid @RequestBody data: LoginDto,
         @RequestHeader("User-Agent") userAgent: String
     ): ResponseEntity<ApiResponse<LoginResponseDto>> {
-        val apiResponse = ApiResponse<LoginResponseDto>(
+        val apiResponse = ApiResponse(
             status = HttpStatus.OK,
             data = authCommandHandler.login(
                 email = data.email,
@@ -51,7 +51,7 @@ class AuthCommandController(
         @Valid @RequestBody data: GoogleAuthDto,
         @RequestHeader("User-Agent") userAgent: String
     ): ResponseEntity<ApiResponse<LoginResponseDto>> {
-        val apiResponse = ApiResponse<LoginResponseDto>(
+        val apiResponse = ApiResponse(
             status = HttpStatus.OK,
             data = authCommandHandler.loginGoogle(
                 token = data.token,
@@ -80,7 +80,7 @@ class AuthCommandController(
     // Verify email
     @PostMapping("/verify-email")
     fun verifyEmail(
-        @AuthenticationPrincipal userId: String,
+        @AuthenticationPrincipal userId: UUID,
         @Valid @RequestBody data: OTPDto
     ): ResponseEntity<ApiResponse<Nothing>> {
         authCommandHandler.verifyEmail(
@@ -97,7 +97,7 @@ class AuthCommandController(
     // Send Email Verify
     @PostMapping("/send-verification-email")
     fun sendVerificationEmail(
-        @AuthenticationPrincipal userId: String
+        @AuthenticationPrincipal userId: UUID
     ): ResponseEntity<ApiResponse<Nothing>> {
         authCommandHandler.sendVerifyEmailOtp(userId)
         val apiResponse = ApiResponse<Nothing>(
@@ -112,7 +112,7 @@ class AuthCommandController(
     fun forgotPassword(
         @Valid @RequestBody data: ForgotPasswordDto
     ): ResponseEntity<ApiResponse<LoginResponseDto>> {
-        val apiResponse = ApiResponse<LoginResponseDto>(
+        val apiResponse = ApiResponse(
             status = HttpStatus.OK,
             message = "Successfully triggered forgot-password event!",
             data = authCommandHandler.forgotPassword(data.email)
@@ -123,7 +123,7 @@ class AuthCommandController(
     // Send Email
     @PostMapping("/send-verification-password")
     fun sendVerificationPassword(
-        @AuthenticationPrincipal userId: String
+        @AuthenticationPrincipal userId: UUID
     ): ResponseEntity<ApiResponse<Nothing>> {
         authCommandHandler.sendVerifyPasswordOtp(userId)
         val apiResponse = ApiResponse<Nothing>(
@@ -136,7 +136,7 @@ class AuthCommandController(
     // Reset password
     @PostMapping("/reset-password")
     fun resetPassword(
-        @AuthenticationPrincipal userId: String,
+        @AuthenticationPrincipal userId: UUID,
         @Valid @RequestBody data: ResetPasswordDto
     ): ResponseEntity<ApiResponse<Nothing>> {
         authCommandHandler.resetPassword(data.otp, data.newPassword, userId)
@@ -150,7 +150,7 @@ class AuthCommandController(
     // Resend 2fa
     @PostMapping("/send-verification-2fa")
     fun sendVerification2FA(
-        @AuthenticationPrincipal userId: String,
+        @AuthenticationPrincipal userId: UUID
     ): ResponseEntity<ApiResponse<Nothing>> {
         authCommandHandler.send2FaOtpEmail(
             userId = userId,
@@ -165,11 +165,11 @@ class AuthCommandController(
     // verify2fa
     @PostMapping("/2fa")
     fun authenticate2FA(
-        @AuthenticationPrincipal userId: String,
+        @AuthenticationPrincipal userId: UUID,
         @Valid @RequestBody data: OTPDto,
         @RequestHeader("User-Agent") userAgent: String
     ): ResponseEntity<ApiResponse<LoginResponseDto>> {
-        val apiResponse = ApiResponse<LoginResponseDto>(
+        val apiResponse = ApiResponse(
             status = HttpStatus.OK,
             message = "Successfully authenticate 2FA!",
             data = authCommandHandler.twoFactorAuth(
@@ -188,7 +188,7 @@ class AuthCommandController(
         @RequestHeader("User-Agent") userAgent: String
     ): ResponseEntity<ApiResponse<LoginResponseDto>> {
         print("refresh")
-        val apiResponse = ApiResponse<LoginResponseDto>(
+        val apiResponse = ApiResponse(
             status = HttpStatus.OK,
             message = "Successfully refreshed!",
             data = authCommandHandler.refreshToken(
@@ -202,7 +202,7 @@ class AuthCommandController(
     // Login device
     @PostMapping("/logout")
     fun logout(
-        @AuthenticationPrincipal userId: String,
+        @AuthenticationPrincipal userId: UUID,
         @RequestBody data: LogoutDevicesDto
     ): ResponseEntity<ApiResponse<Nothing>> {
         authCommandHandler.logoutDevices(

@@ -8,7 +8,7 @@ plugins {
 
 group = "com.horob1"
 version = "0.0.1-SNAPSHOT"
-description = "Common server for Horob1 Docub"
+description = "Common lib for Horob1 Docub"
 
 java {
     toolchain {
@@ -31,12 +31,10 @@ dependencyManagement {
 dependencies {
     api("io.jsonwebtoken:jjwt-api:0.12.6")
 
-    // Dùng nội bộ để thực thi JWT, không cần lộ ra ngoài
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
 
     // API dependencies - exposed to consumers
-    api("org.springframework.boot:spring-boot-starter-web")
     api("org.springframework.boot:spring-boot-starter-validation")
     api("org.springframework.boot:spring-boot-starter-security")
 

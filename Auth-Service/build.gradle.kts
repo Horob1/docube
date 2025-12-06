@@ -31,6 +31,7 @@ extra["springCloudVersion"] = "2025.0.0"
 
 dependencies {
     implementation("com.horob1:common:0.0.1-SNAPSHOT")
+    implementation("com.horob1:web_core:0.0.1-SNAPSHOT")
     implementation("com.google.api-client:google-api-client:2.7.2")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.kafka:spring-kafka")

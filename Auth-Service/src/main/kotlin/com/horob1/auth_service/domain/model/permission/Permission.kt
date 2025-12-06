@@ -11,12 +11,12 @@ import java.util.*
 @Table(
     name = "tbl_permissions",
     indexes = [
-        Index(name = "tbl_permissions_name", columnList = "name")
+        Index(name = "idx_permission_name", columnList = "name")
     ]
 )
 class Permission(
     @Column(name = "name", unique = true, nullable = false)
-    var name: String,
+    var name: String = "",
     @Column(name = "description")
     var description: String = "",
 ) : AbstractEntity<UUID>()

@@ -1,6 +1,6 @@
 package com.horob1.auth_service.api.controller
 
-import com.horob1.auth_service.application.query.PermissionQueryHandler
+import com.horob1.auth_service.service.query.PermissionQueryHandler
 import com.horob1.auth_service.domain.model.permission.Permission
 import com.horob1.common_service.api.dto.response.ApiResponse
 import org.springframework.http.HttpStatus
@@ -17,6 +17,7 @@ import java.util.*
 class PermissionQueryController(
     private val permissionQueryHandler: PermissionQueryHandler
 ) {
+
     @GetMapping("/all")
     fun getAll(): ResponseEntity<ApiResponse<List<Permission>>> {
         val apiResponse = ApiResponse.success(
@@ -27,7 +28,7 @@ class PermissionQueryController(
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse)
     }
 
-    //    @PreAuthorize("hasAuthority('permission:view') or hasAuthority('permission:full_access')")
+    @PreAuthorize("hasAuthority('permission:view') or hasAuthority('permission:full_access')")
     @GetMapping("/{permissionID}")
     fun getByID(@PathVariable permissionID: UUID): ResponseEntity<ApiResponse<Permission>> {
         val apiResponse = ApiResponse.success(

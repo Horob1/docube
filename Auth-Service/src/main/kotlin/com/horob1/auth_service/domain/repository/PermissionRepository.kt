@@ -4,15 +4,21 @@ import com.horob1.auth_service.domain.model.permission.Permission
 import java.util.*
 
 interface PermissionRepository {
-    fun create(name: String, description: String): Permission
+    fun findAll(): List<Permission>
 
-    fun getPermissionById(id: UUID): Permission
+    fun findPermissionById(id: UUID): Permission?
 
-    fun getPermissionList(idList: List<UUID>): List<Permission>
+    fun save(permission: Permission): Permission
 
-    fun update(id: UUID, newName: String, newDesc: String): Permission
+    fun saveAll(permissions: List<Permission>): List<Permission>
 
-    fun deleteById(id: UUID)
+    fun findPermissionByName(name: String): Permission?
 
-    fun getAll(): List<Permission>
+    fun findPermissionsByIdList(idList: List<UUID>): List<Permission>
+
+    fun existsByName(name: String): Boolean
+
+    fun delete(permission: Permission)
+
+    fun count(): Long
 }

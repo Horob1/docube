@@ -8,14 +8,15 @@ import jakarta.persistence.Table
 import java.util.UUID
 
 @Entity
-@Table(name = "tbl_token",
+@Table(
+    name = "tbl_token",
     indexes = [
         Index(name = "idx_token_user_id", columnList = "user_id")
     ]
 )
 class Token(
     @Column(name = "user_id", nullable = false)
-    var userId: String,
+    var userId: UUID,
 
     @Column(name = "token", nullable = false)
     var token: String,

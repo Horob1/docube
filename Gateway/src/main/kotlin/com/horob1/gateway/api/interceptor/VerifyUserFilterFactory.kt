@@ -1,9 +1,9 @@
 package com.horob1.gateway.api.interceptor
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.horob1.gateway.api.exception.AppException
-import com.horob1.gateway.api.response.ApiResponse
-import com.horob1.gateway.enum.TokenType
+import com.horob1.common_service.api.dto.response.ApiResponse
+import com.horob1.common_service.api.exception.AppException
+import com.horob1.common_service.enums.TokenType
 import com.horob1.gateway.util.jwt.JwtTokenManager
 import org.springframework.cloud.gateway.filter.GatewayFilter
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory

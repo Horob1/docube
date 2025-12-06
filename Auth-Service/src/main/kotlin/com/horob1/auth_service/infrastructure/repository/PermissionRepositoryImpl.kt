@@ -1,11 +1,8 @@
 package com.horob1.auth_service.infrastructure.repository
 
-import com.horob1.auth_service.api.exception.ExistedPermission
-import com.horob1.auth_service.api.exception.NewPermissionNameExist
-import com.horob1.auth_service.api.exception.PermissionNotFound
 import com.horob1.auth_service.domain.model.permission.Permission
 import com.horob1.auth_service.domain.repository.PermissionRepository
-import com.horob1.common_service.api.exception.AppException
+import com.horob1.auth_service.infrastructure.repository.postgres.PermissionPostgresRepository
 import org.springframework.stereotype.Repository
 import java.util.*
 
@@ -13,60 +10,41 @@ import java.util.*
 class PermissionRepositoryImpl(
     private val permissionPostgresRepository: PermissionPostgresRepository
 ) : PermissionRepository {
-    override fun create(
-        name: String,
-        description: String
-    ): Permission {
-        val existedPermission = permissionPostgresRepository.existsByName(name)
-        if (existedPermission) {
-            throw AppException(ExistedPermission)
-        }
-        return permissionPostgresRepository.save(
-            Permission(
-                name = name,
-                description = description,
-            )
-        )
+    override fun findAll(): List<Permission> {
+        return permissionPostgresRepository.findAll()
     }
 
-    override fun getPermissionById(id: UUID): Permission {
-        return permissionPostgresRepository.findById(id).orElseThrow {
-            throw AppException(PermissionNotFound)
-        }
+    override fun findPermissionById(id: UUID): Permission? {
+        return permissionPostgresRepository.findById(id).orElse(null)
     }
 
-    override fun getPermissionList(idList: List<UUID>): List<Permission> {
+    override fun save(permission: Permission): Permission {
+        return permissionPostgresRepository.save(permission)
+    }
+
+    override fun saveAll(permissions: List<Permission>): List<Permission> {
+        return permissionPostgresRepository.saveAll(permissions)
+    }
+
+    override fun findPermissionByName(name: String): Permission? {
+        return permissionPostgresRepository.findByName(name)
+    }
+
+    override fun findPermissionsByIdList(idList: List<UUID>): List<Permission> {
         return permissionPostgresRepository.findAllById(idList)
     }
 
-    override fun update(
-        id: UUID,
-        newName: String,
-        newDesc: String
-    ): Permission {
-        val permission = permissionPostgresRepository.findById(id).orElseThrow {
-            throw AppException(PermissionNotFound)
-        }
-        if (newName != permission.name) {
-            if (permissionPostgresRepository.existsByName(newName)) {
-                throw AppException(NewPermissionNameExist)
-            }
-        }
-
-        permission.name = newName
-        permission.description = newDesc
-
-        return permissionPostgresRepository.save(
-            permission
-        )
+    override fun existsByName(name: String): Boolean {
+        return permissionPostgresRepository.existsByName(name)
     }
 
-    override fun deleteById(id: UUID) {
-        return permissionPostgresRepository.deleteById(id)
+    override fun delete(permission: Permission) {
+        permissionPostgresRepository.delete(permission)
     }
 
-    override fun getAll(): List<Permission> {
-        return permissionPostgresRepository.findAll()
+    override fun count(): Long {
+        return permissionPostgresRepository.count()
     }
+
 
 }

@@ -1,7 +1,5 @@
 package com.horob1.auth_service.api.dto.request
 
-import com.horob1.common_service.api.dto.request.CreateUserDto
-import com.horob1.common_service.enums.UserStatus
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
@@ -38,15 +36,3 @@ data class RegisterDto(
     @field:Size(max = 255, message = "Address must be at most 255 characters")
     val address: String = "",
 )
-
-fun RegisterDto.toCreateUser(): CreateUserDto {
-    return CreateUserDto(
-        email = email,
-        firstName = firstName,
-        lastName = lastName,
-        phoneNumber = phoneNumber,
-        address = address,
-        password = password,
-        status = UserStatus.PENDING
-    )
-}

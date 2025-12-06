@@ -58,11 +58,11 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/User-Service" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/Web-core" />
         <option name="gradleJvm" value="openjdk-24" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$/User-Service" />
+            <option value="$PROJECT_DIR$/Web-core" />
           </set>
         </option>
       </GradleProjectSettings>

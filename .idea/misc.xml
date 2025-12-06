@@ -9,6 +9,19 @@
     <file type="web" url="file://$PROJECT_DIR$/Notification-Service" />
     <file type="web" url="file://$PROJECT_DIR$/Socket-Service" />
     <file type="web" url="file://$PROJECT_DIR$/User-Service" />
+    <file type="web" url="file://$PROJECT_DIR$/Web-core" />
+  </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/Web-Core/pom.xml" />
+      </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/Web-Core/pom.xml" />
+      </set>
+    </option>
   </component>
   <component name="ProjectRootManager">
     <output url="file://$PROJECT_DIR$/out" />

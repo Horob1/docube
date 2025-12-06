@@ -7,16 +7,17 @@ import java.util.*
 
 @Entity
 @Table(
-    name = "tbl_roles", indexes = [
-        Index(name = "tbl_roles_name", columnList = "name")
+    name = "tbl_roles",
+    indexes = [
+        Index(name = "idx_role_name", columnList = "name")
     ]
 )
 class Role(
     @Column(name = "name", nullable = false, unique = true)
-    var name: String,
+    var name: String = "",
     @Column(name = "description")
     var description: String = "",
-    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.MERGE])
     @JoinTable(
         name = "tbl_role_permission_mapping",
         joinColumns = [JoinColumn(name = "role_id")],

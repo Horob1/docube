@@ -1,7 +1,7 @@
 package com.horob1.auth_service.api.controller
 
 import com.horob1.auth_service.api.dto.request.CreateUpdatePermissionDto
-import com.horob1.auth_service.application.command.PermissionCommandHandler
+import com.horob1.auth_service.service.command.PermissionCommandHandler
 import com.horob1.auth_service.domain.model.permission.Permission
 import com.horob1.common_service.api.dto.response.ApiResponse
 import jakarta.validation.Valid
@@ -16,7 +16,7 @@ import java.util.*
 class PermissionCommandController(
     private val permissionCommandHandler: PermissionCommandHandler
 ) {
-    //    @PreAuthorize("hasAuthority('permission:add') or hasAuthority('permission:full_access')")
+    @PreAuthorize("hasAuthority('permission:add') or hasAuthority('permission:full_access')")
     @PostMapping
     fun create(
         @Valid @RequestBody data: CreateUpdatePermissionDto
@@ -29,7 +29,7 @@ class PermissionCommandController(
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse)
     }
 
-    //    @PreAuthorize("hasAuthority('permission:edit') or hasAuthority('permission:full_access')")
+    @PreAuthorize("hasAuthority('permission:edit') or hasAuthority('permission:full_access')")
     @PutMapping("/{permissionId}")
     fun update(
         @Valid @RequestBody data: CreateUpdatePermissionDto,
@@ -46,7 +46,7 @@ class PermissionCommandController(
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse)
     }
 
-    //    @PreAuthorize("hasAuthority('permission:delete')  or hasAuthority('permission:full_access')")
+    @PreAuthorize("hasAuthority('permission:delete')  or hasAuthority('permission:full_access')")
     @DeleteMapping("/{permissionId}")
     fun delete(
         @PathVariable permissionId: UUID

@@ -6,7 +6,7 @@ import org.hibernate.annotations.UpdateTimestamp
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.LastModifiedBy
 import java.io.Serializable
-import java.util.*
+import java.time.Instant
 
 @MappedSuperclass()
 abstract class AbstractEntity<T : Serializable> : Serializable {
@@ -27,10 +27,10 @@ abstract class AbstractEntity<T : Serializable> : Serializable {
     @Column(name = "created_at")
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    var createdAt: Date? = null
+    var createdAt: Instant? = null
 
     @Column(name = "updated_at")
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    var updatedAt: Date? = null
+    var updatedAt: Instant? = null
 }

@@ -1,0 +1,98 @@
+[
+  {
+    "created_at": "2025-10-16T13:03:38.209Z",
+    "created_by": null,
+    "updated_at": "2025-10-16T13:03:38.209Z",
+    "updated_by": null,
+    "description": "...",
+    "name": "permission:add"
+  },
+  {
+    "created_at": "2025-10-16T13:03:43.856Z",
+    "created_by": null,
+    "updated_at": "2025-10-16T13:03:43.856Z",
+    "updated_by": null,
+    "description": "...",
+    "name": "permission:edit"
+  },
+  {
+    "created_at": "2025-10-16T13:03:49.333Z",
+    "created_by": null,
+    "updated_at": "2025-10-16T13:03:49.333Z",
+    "updated_by": null,
+    "description": "...",
+    "name": "permission:delete"
+  },
+  {
+    "created_at": "2025-10-27T13:37:28.194Z",
+    "created_by": null,
+    "updated_at": "2025-10-27T13:37:28.194Z",
+    "updated_by": null,
+    "description": "...",
+    "name": "permission:full_access"
+  },
+  {
+    "created_at": "2025-10-27T13:39:26.604Z",
+    "created_by": null,
+    "updated_at": "2025-10-27T13:39:26.604Z",
+    "updated_by": null,
+    "description": "...",
+    "name": "permission:view"
+  },
+  {
+    "created_at": "2025-10-27T13:39:37.651Z",
+    "created_by": null,
+    "updated_at": "2025-10-27T13:39:37.651Z",
+    "updated_by": null,
+    "description": "...",
+    "name": "permission:view_all"
+  },
+  {
+    "created_at": "2025-10-27T13:40:28.105Z",
+    "created_by": null,
+    "updated_at": "2025-10-27T13:40:28.105Z",
+    "updated_by": null,
+    "description": "...",
+    "name": "role:view_all"
+  },
+  {
+    "created_at": "2025-10-27T13:40:32.685Z",
+    "created_by": null,
+    "updated_at": "2025-10-27T13:40:32.685Z",
+    "updated_by": null,
+    "description": "...",
+    "name": "role:view"
+  },
+  {
+    "created_at": "2025-10-27T13:40:40.421Z",
+    "created_by": null,
+    "updated_at": "2025-10-27T13:40:40.421Z",
+    "updated_by": null,
+    "description": "...",
+    "name": "role:full_access"
+  },
+  {
+    "created_at": "2025-10-27T13:40:50.708Z",
+    "created_by": null,
+    "updated_at": "2025-10-27T13:40:50.708Z",
+    "updated_by": null,
+    "description": "...",
+    "name": "role:edit"
+  },
+  {
+    "created_at": "2025-10-27T13:40:56.720Z",
+    "created_by": null,
+    "updated_at": "2025-10-27T13:40:56.720Z",
+    "updated_by": null,
+    "description": "...",
+    "name": "role:add"
+  },
+  {
+    "created_at": "2025-10-27T13:41:02.543Z",
+    "created_by": null,
+    "updated_at": "2025-10-27T13:41:02.543Z",
+    "updated_by": null,
+    "description": "...",
+    "name": "role:delete"
+  }
+]

@@ -4,17 +4,22 @@ import com.horob1.auth_service.domain.model.role.Role
 import java.util.*
 
 interface RoleRepository {
-    fun create(name: String, description: String, permissionList: List<UUID>): Role
 
-    fun getRoleById(id: UUID): Role
+    fun save(role: Role): Role
 
-    fun getRoleList(idList: List<UUID>): List<Role>
+    fun delete(role: Role)
 
-    fun update(id: UUID, newName: String, newDesc: String, newPermissionList: List<UUID>): Role
+    fun findRoleById(id: UUID): Role?
 
-    fun deleteById(id: UUID)
+    fun findRoleByName(name: String): Role?
 
-    fun getAll(): List<Role>
+    fun findRolesByIdList(idList: List<UUID>): List<Role>
 
-    fun getRolesByUserId(userId: String): List<Role>
+    fun findAll(): List<Role>
+
+    fun existsByName(name: String): Boolean
+
+    fun saveAll(roles: List<Role>): List<Role>
+
+    fun count(): Long
 }

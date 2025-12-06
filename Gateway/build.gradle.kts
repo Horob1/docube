@@ -17,13 +17,14 @@ java {
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 extra["springCloudVersion"] = "2025.0.0"
 
 dependencies {
+    implementation("com.horob1:common:0.0.1-SNAPSHOT")
     implementation("org.springframework.kafka:spring-kafka")
-
     implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("io.jsonwebtoken:jjwt-api:0.12.6")

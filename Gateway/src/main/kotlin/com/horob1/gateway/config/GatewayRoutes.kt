@@ -1,7 +1,7 @@
 package com.horob1.gateway.config
 
+import com.horob1.common_service.enums.TokenType
 import com.horob1.gateway.api.interceptor.VerifyUserFilterFactory
-import com.horob1.gateway.enum.TokenType
 import org.springframework.cloud.gateway.route.RouteLocator
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder
 import org.springframework.cloud.gateway.route.builder.filters

@@ -82,6 +82,12 @@ sealed class AppError(
         status = HttpStatus.INTERNAL_SERVER_ERROR,
     )
 
+    data object NotInternalCall : AppError(
+        code = "AUTH_0010",
+        message = "Invalid request.",
+        status = HttpStatus.UNAUTHORIZED,
+    )
+
     // --- Input Data Errors ---
 
     data object ValidationError : AppError(
