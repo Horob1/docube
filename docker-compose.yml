@@ -1,0 +1,112 @@
+# =============================================================================
+# Docube — Spring Boot Services
+# =============================================================================
+# Yêu cầu trước khi chạy:
+#   1. Tạo external network:  docker network create horob1_docub
+#   2. Khởi động Redis:       cd Redis && docker compose up -d
+#   3. Khởi động Kafka:       cd Message-Queue && docker compose up -d
+#   4. Copy .env.example → .env cho từng service và điền giá trị thực
+#
+# Chạy toàn bộ:
+#   docker compose up -d --build
+#
+# Chạy từng service:
+#   docker compose up -d discovery
+#   docker compose up -d auth-service doc-service
+#   docker compose up -d gateway
+# =============================================================================
+
+networks:
+  horob1_docub:
+    external: true
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # Discovery Server (Eureka)
+  # ---------------------------------------------------------------------------
+  discovery:
+    build: ./docube_discovery_service
+    container_name: docube-discovery
+    ports:
+      - "9000:9000"
+    networks:
+      - horob1_docub
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9000/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+
+  # ---------------------------------------------------------------------------
+  # Auth Service
+  # ---------------------------------------------------------------------------
+  auth-service:
+    build: ./Auth-Service
+    container_name: docube-auth
+    ports:
+      - "9100:9100"
+    env_file:
+      - ./Auth-Service/.env
+    networks:
+      - horob1_docub
+    restart: unless-stopped
+    depends_on:
+      discovery:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9100/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 90s
+      retries: 3
+
+  # ---------------------------------------------------------------------------
+  # Doc Service
+  # ---------------------------------------------------------------------------
+  doc-service:
+    build: ./Doc-Service
+    container_name: docube-doc
+    ports:
+      - "9200:9200"
+    env_file:
+      - ./Doc-Service/.env
+    networks:
+      - horob1_docub
+    restart: unless-stopped
+    depends_on:
+      discovery:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9200/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 90s
+      retries: 3
+
+  # ---------------------------------------------------------------------------
+  # API Gateway
+  # ---------------------------------------------------------------------------
+  gateway:
+    build: ./Gateway
+    container_name: docube-gateway
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./Gateway/.env
+    networks:
+      - horob1_docub
+    restart: unless-stopped
+    depends_on:
+      auth-service:
+        condition: service_started
+      doc-service:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 90s
+      retries: 3
