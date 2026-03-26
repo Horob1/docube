@@ -10,8 +10,8 @@ import com.horob1.auth_service.domain.model.user.UserSummary
 import com.horob1.auth_service.domain.model.user.toSummary
 import com.horob1.auth_service.domain.repository.RoleRepository
 import com.horob1.auth_service.domain.repository.UserRepository
-import com.horob1.common_service.api.exception.AppException
-import com.horob1.common_service.enums.UserStatus
+import com.horob1.auth_service.shared.exception.AppException
+import com.horob1.auth_service.shared.enums.UserStatus
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -46,7 +46,6 @@ class UserCommandHandler(
         user.lastName = updateData.lastName
         user.phoneNumber = updateData.phoneNumber
         user.address = updateData.address
-        user.is2FAEnabled = updateData.is2FAEnabled
 
         return userRepository.save(user).toSummary()
     }
@@ -63,7 +62,7 @@ class UserCommandHandler(
         if (user.status != UserStatus.BAN) {
             throw AppException(UserIsActive)
         }
-        user.status = user.previousStatus!!
+        user.status = user.previousStatus ?: UserStatus.ACTIVE
         user.previousStatus = UserStatus.BAN
         userRepository.save(user).toSummary()
     }

@@ -2,7 +2,7 @@ package com.horob1.auth_service.api.controller
 
 import com.horob1.auth_service.service.query.PermissionQueryHandler
 import com.horob1.auth_service.domain.model.permission.Permission
-import com.horob1.common_service.api.dto.response.ApiResponse
+import com.horob1.auth_service.shared.dto.response.ApiResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize

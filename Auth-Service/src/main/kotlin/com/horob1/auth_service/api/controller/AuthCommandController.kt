@@ -10,7 +10,7 @@ import com.horob1.auth_service.api.dto.request.RegisterDto
 import com.horob1.auth_service.api.dto.request.ResetPasswordDto
 import com.horob1.auth_service.api.dto.response.LoginResponseDto
 import com.horob1.auth_service.service.command.AuthCommandHandler
-import com.horob1.common_service.api.dto.response.ApiResponse
+import com.horob1.auth_service.shared.dto.response.ApiResponse
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -147,21 +147,6 @@ class AuthCommandController(
         return ResponseEntity.status(apiResponse.status).body(apiResponse)
     }
 
-    // Resend 2fa
-    @PostMapping("/send-verification-2fa")
-    fun sendVerification2FA(
-        @AuthenticationPrincipal userId: UUID
-    ): ResponseEntity<ApiResponse<Nothing>> {
-        authCommandHandler.send2FaOtpEmail(
-            userId = userId,
-        )
-        val apiResponse = ApiResponse<Nothing>(
-            status = HttpStatus.OK,
-            message = "Send email successful!!"
-        )
-        return ResponseEntity.status(apiResponse.status).body(apiResponse)
-    }
-
     // verify2fa
     @PostMapping("/2fa")
     fun authenticate2FA(
@@ -215,4 +200,6 @@ class AuthCommandController(
         )
         return ResponseEntity.status(apiResponse.status).body(apiResponse)
     }
+
+
 }

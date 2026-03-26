@@ -3,7 +3,7 @@ package com.horob1.auth_service.service.query
 import com.horob1.auth_service.api.exception.PermissionNotFound
 import com.horob1.auth_service.domain.model.permission.Permission
 import com.horob1.auth_service.domain.repository.PermissionRepository
-import com.horob1.common_service.api.exception.AppException
+import com.horob1.auth_service.shared.exception.AppException
 import org.springframework.stereotype.Service
 import java.util.*
 

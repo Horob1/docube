@@ -5,7 +5,7 @@ import com.horob1.auth_service.api.dto.request.UpdateRoleDto
 import com.horob1.auth_service.api.dto.request.UpdateUserDto
 import com.horob1.auth_service.domain.model.user.UserSummary
 import com.horob1.auth_service.service.command.UserCommandHandler
-import com.horob1.common_service.api.dto.response.ApiResponse
+import com.horob1.auth_service.shared.dto.response.ApiResponse
 
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus

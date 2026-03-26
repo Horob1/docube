@@ -30,8 +30,7 @@ repositories {
 extra["springCloudVersion"] = "2025.0.0"
 
 dependencies {
-    implementation("com.horob1:common:0.0.1-SNAPSHOT")
-    implementation("com.horob1:web_core:0.0.1-SNAPSHOT")
+
     implementation("com.google.api-client:google-api-client:2.7.2")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.kafka:spring-kafka")
@@ -48,6 +47,8 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.postgresql:postgresql")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("com.warrenstrange:googleauth:1.5.0")
+    implementation("com.cloudinary:cloudinary-http44:1.39.0")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
@@ -78,4 +79,16 @@ allOpen {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
+    val envFile = file("../.env")
+    if (envFile.exists()) {
+        envFile.readLines()
+            .filter { it.isNotBlank() && !it.startsWith("#") && it.contains("=") }
+            .forEach { line ->
+                val (key, value) = line.split("=", limit = 2)
+                environment(key.trim(), value.trim())
+            }
+    }
 }

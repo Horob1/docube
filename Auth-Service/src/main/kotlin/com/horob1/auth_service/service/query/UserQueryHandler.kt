@@ -4,7 +4,7 @@ import com.horob1.auth_service.api.exception.UserNotFound
 import com.horob1.auth_service.domain.model.user.UserSummary
 import com.horob1.auth_service.domain.model.user.toSummary
 import com.horob1.auth_service.domain.repository.UserRepository
-import com.horob1.common_service.api.exception.AppException
+import com.horob1.auth_service.shared.exception.AppException
 import org.springframework.stereotype.Service
 import java.util.UUID
 

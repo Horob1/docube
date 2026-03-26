@@ -3,7 +3,7 @@ package com.horob1.auth_service.api.controller
 import com.horob1.auth_service.api.dto.request.CreateUpdatePermissionDto
 import com.horob1.auth_service.service.command.PermissionCommandHandler
 import com.horob1.auth_service.domain.model.permission.Permission
-import com.horob1.common_service.api.dto.response.ApiResponse
+import com.horob1.auth_service.shared.dto.response.ApiResponse
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

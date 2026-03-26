@@ -64,3 +64,8 @@ resilience4j:
 
 google:
   client-id: 967227059533-n2f3t4vqrb5p3kj63fknn60ru0vemdvj.apps.googleusercontent.com
+
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}

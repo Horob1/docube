@@ -1,9 +1,9 @@
 package com.horob1.auth_service.api.controller
 
 import com.horob1.auth_service.service.query.InternalCallQueryHandler
-import com.horob1.common_service.api.exception.AppError
-import com.horob1.common_service.api.exception.AppException
-import com.horob1.common_service.constant.SecurityConstants.INTERNAL_CALL_HEADER
+import com.horob1.auth_service.shared.exception.AppError
+import com.horob1.auth_service.shared.exception.AppException
+import com.horob1.auth_service.shared.constant.SecurityConstants.INTERNAL_CALL_HEADER
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

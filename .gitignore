@@ -1,1 +1,65 @@
+# ===========================
+# Gradle
+# ===========================
+**/.gradle/
+**/build/
+**/out/
+**/bin/
+!**/gradle/wrapper/gradle-wrapper.jar
+
+# ===========================
+# Secrets & Environment
+# ===========================
 **/.env
+**/.env.*
+**/application-local.yaml
+**/application-local.yml
+**/application-secret.yaml
+**/application-secret.yml
+**/application-dev.yaml
+**/application-prod.yaml
+
+# ===========================
+# IDE
+# ===========================
+.idea/
+**/*.iml
+**/*.iws
+**/*.ipr
+.vscode/
+.project
+.classpath
+.settings/
+
+# ===========================
+# Kotlin / Java compiled
+# ===========================
+**/*.class
+!**/gradle/wrapper/gradle-wrapper.jar
+
+# ===========================
+# Logs
+# ===========================
+**/*.log
+**/logs/
+**/hs_err_pid*.log
+
+# ===========================
+# OS
+# ===========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===========================
+# Spring Boot
+# ===========================
+**/target/
+
+# ===========================
+# Custom
+# ===========================
+cloned/
+**/cloned/
+claudekit-skills/
+.agent/

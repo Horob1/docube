@@ -1,7 +1,7 @@
 package com.horob1.auth_service.infrastructure.producer
 
-import com.horob1.common_service.kafka.event.auth.OtpEmailEvent
-import com.horob1.common_service.kafka.topic.AuthTopic
+import com.horob1.auth_service.shared.kafka.event.OtpEmailEvent
+import com.horob1.auth_service.shared.kafka.topic.AuthTopic
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
 

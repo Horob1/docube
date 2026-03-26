@@ -1,6 +1,6 @@
 package com.horob1.auth_service.api.exception
 
-import com.horob1.common_service.api.exception.AppError
+import com.horob1.auth_service.shared.exception.AppError
 import org.springframework.http.HttpStatus
 
 val InvalidIdentityInfo = AppError.CustomError(
@@ -61,4 +61,22 @@ val WrongUser = AppError.CustomError(
     code = "AUTHS_0010",
     message = "Wrong user",
     status = HttpStatus.BAD_REQUEST
+)
+
+val TwoFAAlreadyEnabled = AppError.CustomError(
+    code = "AUTHS_0011",
+    message = "2FA is already enabled",
+    status = HttpStatus.CONFLICT
+)
+
+val TwoFANotEnabled = AppError.CustomError(
+    code = "AUTHS_0012",
+    message = "2FA is not enabled or setup is incomplete",
+    status = HttpStatus.BAD_REQUEST
+)
+
+val PendingUserRequest = AppError.CustomError(
+    code = "AUTHS_0013",
+    message = "Account is not verified. Please verify your email first.",
+    status = HttpStatus.FORBIDDEN
 )

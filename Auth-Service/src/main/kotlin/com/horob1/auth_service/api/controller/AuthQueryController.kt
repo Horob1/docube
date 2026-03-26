@@ -3,8 +3,8 @@ package com.horob1.auth_service.api.controller
 import com.horob1.auth_service.service.query.AuthQueryHandler
 import com.horob1.auth_service.domain.model.role.Role
 import com.horob1.auth_service.domain.model.token.Token
-import com.horob1.common_service.api.dto.response.ApiResponse
-import com.horob1.common_service.constant.SecurityConstants.USER_ID_HEADER
+import com.horob1.auth_service.shared.dto.response.ApiResponse
+import com.horob1.auth_service.shared.constant.SecurityConstants.USER_ID_HEADER
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal

@@ -5,4 +5,5 @@ data class LoginResponseDto(
     val accessTokenType: String,
     val refreshToken: String? = null,
     val clientId: String? = null,
+    val userId: String? = null,
 )

@@ -8,7 +8,7 @@ import com.horob1.auth_service.api.exception.RoleNotFound
 import com.horob1.auth_service.domain.model.role.Role
 import com.horob1.auth_service.domain.repository.PermissionRepository
 import com.horob1.auth_service.domain.repository.RoleRepository
-import com.horob1.common_service.api.exception.AppException
+import com.horob1.auth_service.shared.exception.AppException
 import org.springframework.stereotype.Service
 import java.util.*
 

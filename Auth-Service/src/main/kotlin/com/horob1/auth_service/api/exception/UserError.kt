@@ -1,7 +1,7 @@
 package com.horob1.auth_service.api.exception
 
 
-import com.horob1.common_service.api.exception.AppError
+import com.horob1.auth_service.shared.exception.AppError
 import org.springframework.http.HttpStatus
 
 val UserExisted = AppError.CustomError(

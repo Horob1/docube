@@ -21,6 +21,4 @@ data class UpdateUserDto(
 
     @field:Size(max = 255, message = "Address must be at most 255 characters")
     val address: String = "",
-
-    val is2FAEnabled: Boolean = false,
 )

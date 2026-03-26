@@ -2,7 +2,7 @@ package com.horob1.auth_service.domain.model.user
 
 import com.horob1.auth_service.domain.model.AbstractEntity
 import com.horob1.auth_service.domain.model.role.Role
-import com.horob1.common_service.enums.UserStatus
+import com.horob1.auth_service.shared.enums.UserStatus
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -59,6 +59,9 @@ class User(
 
     @Column(nullable = false)
     var is2FAEnabled: Boolean = false,
+
+    @Column
+    var totpSecret: String? = null,
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.MERGE])
     @JoinTable(

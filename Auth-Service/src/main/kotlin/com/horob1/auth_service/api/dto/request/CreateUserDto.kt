@@ -1,6 +1,6 @@
 package com.horob1.auth_service.api.dto.request
 
-import com.horob1.common_service.enums.UserStatus
+import com.horob1.auth_service.shared.enums.UserStatus
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern

@@ -1,8 +1,8 @@
 package com.horob1.auth_service.util.jwt
 
-import com.horob1.common_service.api.exception.AppError
-import com.horob1.common_service.api.exception.AppException
-import com.horob1.common_service.enums.TokenType
+import com.horob1.auth_service.shared.exception.AppError
+import com.horob1.auth_service.shared.exception.AppException
+import com.horob1.auth_service.shared.enums.TokenType
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys

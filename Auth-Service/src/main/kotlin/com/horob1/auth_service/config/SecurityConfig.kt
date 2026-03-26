@@ -1,7 +1,7 @@
 package com.horob1.auth_service.config
 
-import com.horob1.common_service.constant.SecurityConstants
-import com.horob1.web_core.interceptor.UserPermissionContextFilter
+import com.horob1.auth_service.shared.constant.SecurityConstants
+import com.horob1.auth_service.shared.web.interceptor.UserPermissionContextFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -26,6 +26,7 @@ class SecurityConfig(
             "/api/v1/auth/register",
             "/api/v1/auth/refresh",
             "/api/v1/auth-service/**",
+            "/api/v1/authors/**",
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/health",
@@ -39,9 +40,9 @@ class SecurityConfig(
             "/api/v1/auth/send-verification-email",
             "/api/v1/auth/send-verification-password",
             "/api/v1/auth/reset-password",
-            "/api/v1/auth/send-verification-2fa",
             "/api/v1/auth/2fa",
             "/api/v1/auth/logout",
+            "/api/v1/profile/**",
         )
     }
 

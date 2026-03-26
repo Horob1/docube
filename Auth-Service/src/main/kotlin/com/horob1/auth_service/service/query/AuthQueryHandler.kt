@@ -6,7 +6,7 @@ import com.horob1.auth_service.domain.model.token.Token
 import com.horob1.auth_service.domain.repository.RoleRepository
 import com.horob1.auth_service.domain.repository.TokenRepository
 import com.horob1.auth_service.domain.repository.UserRepository
-import com.horob1.common_service.api.exception.AppException
+import com.horob1.auth_service.shared.exception.AppException
 import org.springframework.stereotype.Service
 import java.util.UUID
 
